@@ -1,0 +1,23 @@
+{
+  "name": "coding-test",
+  "version": "0.0.1",
+  "description": "Data61 task",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/novo6123/Data61.git"
+  },
+  "author": "norman.vo@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/novo6123/Data61/issues"
+  },
+  "homepage": "https://github.com/novo6123/Data61#readme",
+  "devDependencies": {
+    "webpack": "^4.29.5",
+    "webpack-dev-server": "^3.2.1"
+  }
+}
