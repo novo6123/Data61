@@ -1,0 +1,34 @@
+{
+  "name": "tagsandfollows",
+  "version": "0.1.0",
+  "description": "task",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "webpack",
+    "start": "webpack && http-server"
+  },
+  "author": "norman.vo@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/plugin-transform-modules-commonjs": "^7.2.0",
+    "@babel/preset-env": "^7.3.4",
+    "@webpack-cli/init": "^0.1.3",
+    "babel-jest": "^24.1.0",
+    "babel-loader": "^8.0.5",
+    "css-loader": "^2.1.0",
+    "jest": "^24.1.0",
+    "jest-cli": "^24.1.0",
+    "node-sass": "^4.11.0",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "uglifyjs-webpack-plugin": "^2.1.2",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.2.1"
+  },
+  "dependencies": {
+    "d3": "^5.9.1"
+  }
+}
