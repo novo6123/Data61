@@ -1,10 +1,41 @@
 body {
   font-family: sans-serif;
   background: gold;
-  margin: 0 auto; }
+  background: #fefefe;
+  max-width: 900px;
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  padding: 0 10px; }
+
+h2 {
+  font-size: 2rem;
+  margin: 12px 0; }
 
 p {
   font-style: serif;
   font-size: 0.9rem; }
+
+.buttonWrapper {
+  margin: 8px 0; }
+  .buttonWrapper button {
+    margin-right: 8px;
+    font-size: 1rem;
+    border-radius: 4px;
+    padding: 4px 10px; }
+
+.displayWrapper {
+  outline: 1px solid #222;
+  margin: 0;
+  padding: 8px 4px 8px 8px;
+  width: calc(50% - 12px - 8px);
+  display: inline-block;
+  vertical-align: top; }
+  .displayWrapper.relationshipsVisual {
+    margin-right: 12px; }
+  .displayWrapper h2 {
+    margin: 4px 0; }
+  .displayWrapper text {
+    font-size: 0.8rem; }
 
 /*# sourceMappingURL=style.css.map */
