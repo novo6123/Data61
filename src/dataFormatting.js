@@ -52,14 +52,40 @@ var follows = [
 	[3713811, 1000591]
 ];
 
-// sort the list?
+// sort the list
 // build the data set:
+/*
+1. sort data for easy parsing
+2. parse data: remove duplicate entries
+3. build data set
+data = [
+	{
+		id: 12345
+		following: [295, 961343, 3382],
+		followers: [1234, 8934, 8310, 340213],
+		tags: [#foo, #blah, #hello world]
+	}
+]
+
+
+dataset = {
+	['12345']: {
+		following: [295, 961343, 3382],
+		followers: [1234, 8934, 8310, 340213],
+		tags: [#foo, #blah, #hello world]
+	}
+}
+
+*/
+follows.sort();
+var dataset = {};
+var hasId = -1;
 
 follows.map((a) => {
 	// build dataset step 1: setup structure for ids
 	// and populate 'following' list
 	if (dataset[a[0]]) {
-		console.log(dataset[a[0]], dataset[a[1]]);
+// 		console.log(dataset[a[0]], dataset[a[1]]);
 		if (dataset[a[0]].following.indexOf(a[1]) < 0) {
 			dataset[a[0]].following.push(a[1]);
 		}
