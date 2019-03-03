@@ -28,6 +28,78 @@ function vis() {
   window.socialNetwork.data = window.socialNetwork.data || [];
   window.socialNetwork.tagsAggregate = {};
 
+  // add table data to page
+  let renderTable = function() {
+    // console.log("renderTable()");
+    // console.log(dataset);
+    // console.log(socialNetwork.data);
+    // console.log(socialNetwork.tagsAggregate);
+
+    // insert label
+    let label = document.createElement("h3");
+    label.innerText = "tabulated data";
+    document.getElementById(`${VIS_ID.TABLE}`).appendChild(label);
+
+    let tableWrapper = document.createElement("div");
+    tableWrapper.className += "tableWrapper ";
+
+    // render 'dataset'
+    let dataTable = document.createElement("table");
+    let dataTr = document.createElement("tr");
+    let dataTh = document.createElement("th");
+
+    // set up headers
+    ["id", "following", "followers", "tags"].map(a => {
+      dataTh = document.createElement("th");
+      dataTh.innerText = a;
+      dataTh.className += a;
+      dataTr.appendChild(dataTh);
+    });
+    dataTable.appendChild(dataTr);
+
+    for (let key in dataset) {
+      // console.log(key, dataset[key]);
+      dataTr = document.createElement("tr");
+
+      let dataTd;
+
+      // id
+      dataTd = document.createElement("td");
+      dataTd.innerText = String(key);
+      dataTd.className += "id";
+      dataTr.appendChild(dataTd);
+
+      dataTd = document.createElement("td");
+      dataTd.innerText = dataset[key].following
+        .toString()
+        .split(",")
+        .join(", ");
+      dataTd.className += "following";
+      dataTr.appendChild(dataTd);
+
+      dataTd = document.createElement("td");
+      dataTd.innerText = dataset[key].followers
+        .toString()
+        .split(",")
+        .join(", ");
+      dataTd.className += "followers";
+      dataTr.appendChild(dataTd);
+
+      dataTd = document.createElement("td");
+      dataTd.className += "tags";
+      dataTd.innerText =
+        dataset[key].tags && dataset[key].tags.length > 0
+          ? dataset[key].tags.join(", ")
+          : "";
+
+      // console.log(dataTd);
+      dataTr.appendChild(dataTd);
+
+      dataTable.appendChild(dataTr);
+    }
+    document.getElementById(`${VIS_ID.TABLE}`).appendChild(dataTable);
+  }; // renderTable
+
   let renderRelationshipVis = function() {
     let visElem = document.getElementById(`${VIS_ID.RELATIONSHIPS}`);
     // insert label
@@ -119,7 +191,7 @@ goal:
     let tagsValue = [];
 
     const V_SCALE = 20; // seems to be reasonable for displaying lots of tags
-    const H_SCALE = 10; // Math.max(tagsValue) + 10; TODO dynamic scale!
+    const H_SCALE = 120; // Math.max(tagsValue) + 10; TODO dynamic scale!
     // let H_SCALE = parseInt(Math.max(tagsValue) + 5);
     // console.log(V_SCALE, H_SCALE);
 
@@ -281,6 +353,9 @@ goal:
 
     // TODO
     renderRelationshipVis();
+
+    // WIP
+    renderTable();
   };
 
   let clearViews = function() {
