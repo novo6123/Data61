@@ -11,6 +11,14 @@ norman.vo@gmail.com
     #### Note:
     tags were normalised for what seemed like errors such as `;:().,`
 
+## run the project
+
+1. clone repo & pull branch ('datavis')
+2. open index.html in localhost
+3. click 'Add' to render follow-relationships. Continue clicking 'Add' to add more data and render 'tags' graph. A table of data is rendered at the bottom
+
+
+
 ## run test
 
 - have you installed jest? `$ npm i -g jest`
