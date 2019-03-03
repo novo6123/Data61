@@ -1,8 +1,10 @@
+$width: 900px;
+
 body {
   font-family: sans-serif;
   background: gold;
   background: #fefefe;
-  max-width: 900px;
+  max-width: $width;
   position: relative;
   display: block;
   margin: 0 auto;
@@ -50,4 +52,164 @@ p {
     font-size: 0.8rem;
   }
 
+  rect > text {
+    text-anchor: end;
+  }
 }
+
+$table_border: 1px solid rgba(100, 100, 100, 0.9);
+.table {
+  font-size: 0.9rem;
+  clear: both;
+  display: block;
+  margin: 20px 0;
+  width: calc(100% - 16px);
+  table-layout: fixed;
+
+  .id {
+    width: 100px;
+  }
+  .followers,
+  .following {
+    width: 120px;
+    overflow: visible;
+  }
+  .tags {
+    width: 540px;
+  }
+
+  th,
+  td {
+    outline: $table_border;
+  }
+  tr {
+    outline: $table_border;
+  }
+  td {
+    word-wrap: break-word;
+  }
+}
+
+.cluster {
+  //   outline: 1px dotted #bbb;
+  //   outline: 3px solid green;
+  margin: 12px 0 24px;
+}
+
+.targetFollowing,
+.targetFollower {
+  display: inline-block;
+  width: auto;
+  position: relative;
+  outline: 1px solid black;
+  padding: 2px 0;
+  background: white;
+  text-align: center;
+
+  &:after {
+    content: " ";
+    display: block;
+    width: 0;
+    height: 0;
+    position: absolute;
+    border: 6px solid transparent;
+    left: calc(50% - 3px);
+  }
+}
+.targetFollowing {
+  margin: 8px 0 12px;
+  &:after {
+    border-bottom: 10px solid black;
+    top: 17px;
+  }
+}
+
+.targetFollower {
+  margin: 12px 0 0;
+  &:after {
+    border-bottom: 10px solid black;
+    top: -17px;
+  }
+}
+
+.target {
+  width: 100%;
+  position: relative;
+  outline: 1px solid black;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.3rem;
+  padding: 8px 0;
+  box-shadow: 0 1px 4px #444;
+}
+
+[class*="w"] {
+  width: 5%;
+  min-width: 12px;
+}
+.w1000 {
+  width: 100%;
+}
+.w500 {
+  width: 50%;
+}
+.w333 {
+  width: 33%;
+}
+.w250 {
+  width: 25%;
+}
+.w200 {
+  width: 20%;
+}
+.w166 {
+  width: 16.6%;
+}
+.w142 {
+  width: 14.2%;
+}
+.w125 {
+  width: 12.5%;
+}
+.w111 {
+  width: 11.1%;
+}
+.w100 {
+  width: 10%;
+}
+.w90 {
+  width: 9.09%;
+}
+.w83 {
+  width: 8.3%;
+}
+.w76 {
+  width: 7.69%;
+}
+.w71 {
+  width: 7.14%;
+}
+
+// .cluster {
+//   display: flex;
+//   flex-wrap: wrap;
+// }
+
+// .target {
+//   flex-shrink: 0;
+//   /* float: left; */
+// }
+
+// .targetFollower {
+//   flex-shrink: 99;
+//   min-width: 24px;
+//   width: auto;
+//   display: inline;
+//   max-width: 38px;
+//   background: white;
+// }
+
+// .targetFollowing {
+//   flex-basis: auto;
+//   flex-shrink: 99;
+// }
