@@ -5,22 +5,6 @@
 4. A visualization of one statistic about the social network: tag frequencies. That is, for the current social network, display the aggregated tag frequencies of the whole network.
 */
 
-// module.exports = (function () {
-//   constructor() {
-// console.log("VisNetwork constructor");
-//   }
-// });
-
-// export default vis;
-
-// --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-// import style from "build/style.css";
-
-// import { TagsData } from "./tags";
-// let foo = new TagsData();
-// console.log(foo());
-
 function vis() {
   "use strict";
 
@@ -43,124 +27,6 @@ function vis() {
   window.socialNetwork = window.socialNetwork || {};
   window.socialNetwork.data = window.socialNetwork.data || [];
   window.socialNetwork.tagsAggregate = {};
-
-  let getData = function() {
-    window.store.sample().then(a => {
-      socialNetwork.data.push(...a);
-    });
-  };
-
-  let follows = socialNetwork.data;
-  let dataset = {};
-  let tagsAggregate = {};
-
-  let formatData = async function() {
-    follows.sort();
-
-    follows.map(a => {
-      // build formatted dataset from data
-      /*
-      goal:
-      {
-        following: <array of Strings>,
-        followers:  <array of Strings>,
-        tags: <array of Strings>
-      }
-      */
-      // console.log("dataset", dataset);
-      // console.log("a", a);
-      // console.log("a[0]: ", a[0]);
-      // console.log("a[1]: ", a[1]);
-
-      // build dataset step 1: setup structure for ids
-      // and populate 'following' list
-      if (dataset[a[0]]) {
-        if (
-          dataset[a[0]].following &&
-          dataset[a[0]].following.indexOf(a[1]) < 0
-        ) {
-          dataset[a[0]].following.push(a[1]);
-        }
-      } else {
-        dataset[a[0]] = {
-          followers: [],
-          following: [a[1]],
-          tags: []
-        };
-      }
-
-      // build dataset step 2: populate 'followers' list
-      if (dataset[a[1]]) {
-        if (
-          dataset[a[1]].followers &&
-          dataset[a[1]].followers.indexOf(a[0]) < 0
-        ) {
-          dataset[a[1]].followers.push(a[0]);
-        }
-      } else {
-        dataset[a[1]] = {
-          following: [],
-          followers: [a[0]],
-          tags: []
-        };
-      }
-    }); // follows.map()
-
-    // DONE: step 3: populate tags for each key
-    for (var key in dataset) {
-      dataset[key].tags = await window.store
-        .tags(String(key))
-        .then(
-          function(a) {
-            return a[0];
-          },
-          function(e) {
-            console.log("error: ", e.message);
-          }
-        )
-        .catch(function() {
-          // TODO do something?
-        });
-    }
-
-    // step 4: create a separate list for tags
-    // represent as horizontal bar plot? or bubble chart?
-    // https://www.d3-graph-gallery.com/graph/barplot_horizontal.html
-    // it should do the job well: clearly show tag aggregation
-    // need to parse/normalise data into this format
-    /*
-    e.g.
-      {
-        "@bfeld":         1,
-        "@lessig:":       1
-        "@mattcharris":   5,
-        "@mokoyfman,":    1
-      }
-      */
-    // needs optimisation, currently O[n^3]
-    for (const key in dataset) {
-      let tagList = dataset[key].tags;
-      for (let i = 0, ii = tagList.length; i < ii; i += 1) {
-        // remove common typos scattered in tags ':', ','
-        let parsedTag = tagList[i].replace(/[;:().,]/gi, "");
-        // console.log(parsedTag);
-        if (!!tagsAggregate[parsedTag]) {
-          // already in list, increment
-          tagsAggregate[parsedTag] += 1;
-        } else {
-          // add to aggregate, count 1
-          tagsAggregate[parsedTag] = 1;
-        }
-      }
-    }
-    // console.log(tagsAggregate);
-
-    window.socialNetwork.tagsAggregate = tagsAggregate;
-
-    // DEV ONLY
-    window.tagsAggregate = tagsAggregate;
-    window.dataset = dataset;
-  }; // formatData()
 
   let renderRelationshipVis = function() {
     let visElem = document.getElementById(`${VIS_ID.RELATIONSHIPS}`);
@@ -190,18 +56,18 @@ function vis() {
     clusterWrapper.className += "clusterWrapper ";
     let cluster, target, targetFollower, targetFollowing;
     /*
-    goal:
-    <div class="cluster">
-        <div class="targetFollowing">23</div>
-        <div class="targetFollowing">92110</div>
-        <div class="targetFollowing">84399</div>
+goal:
+<div class="cluster">
+    <div class="targetFollowing">23</div>
+    <div class="targetFollowing">92110</div>
+    <div class="targetFollowing">84399</div>
 
-        <div class="target">295</div>
+    <div class="target">295</div>
 
-        <div class="targetFollower">1234</div>
-        <div class="targetFollower">30402</div>
-    </div>
-    */
+    <div class="targetFollower">1234</div>
+    <div class="targetFollower">30402</div>
+</div>
+*/
 
     for (var key in dataset) {
       console.log(dataset[key]);
@@ -253,7 +119,7 @@ function vis() {
     let tagsValue = [];
 
     const V_SCALE = 20; // seems to be reasonable for displaying lots of tags
-    const H_SCALE = 120; // Math.max(tagsValue) + 10; TODO dynamic scale!
+    const H_SCALE = 10; // Math.max(tagsValue) + 10; TODO dynamic scale!
     // let H_SCALE = parseInt(Math.max(tagsValue) + 5);
     // console.log(V_SCALE, H_SCALE);
 
@@ -408,6 +274,29 @@ function vis() {
     //   .attr("class", "barLabel");
   }; // renderTagVis()
 
+  let renderViews = function() {
+    // console.log("renderViews()");
+    formatData();
+    renderTagVis();
+
+    // TODO
+    renderRelationshipVis();
+  };
+
+  let clearViews = function() {
+    for (var key in VIS_ID) {
+      document.getElementById(VIS_ID[key]).innerHTML = "";
+      document.getElementById(VIS_ID[key]).remove();
+    }
+    makeDisplayContainer();
+  };
+
+  let getData = function() {
+    window.store.sample().then(a => {
+      socialNetwork.data.push(...a);
+    });
+  };
+
   let addControls = function() {
     // button parent
     let buttonWrapper = document.createElement("div");
@@ -440,14 +329,6 @@ function vis() {
     document.body.appendChild(buttonWrapper);
   }; // addControls
 
-  let clearViews = function() {
-    for (var key in VIS_ID) {
-      document.getElementById(VIS_ID[key]).innerHTML = "";
-      document.getElementById(VIS_ID[key]).remove();
-    }
-    makeDisplayContainer();
-  };
-
   let makeDisplayContainer = function() {
     for (var key in VIS_ID) {
       let displayWrapper = document.createElement("div");
@@ -458,17 +339,117 @@ function vis() {
     }
   }; // makeDisplayContainer
 
-  let renderViews = function() {
-    // console.log("renderViews()");
-    formatData();
-    renderTagVis();
+  let follows = socialNetwork.data;
+  let dataset = {};
+  let tagsAggregate = {};
 
-    // TODO
-    renderRelationshipVis();
+  let formatData = async function() {
+    follows.sort();
 
-    // WIP
-    // renderTable();
-  };
+    follows.map(a => {
+      // build formatted dataset from data
+      /*
+      goal:
+      {
+        following: <array of Strings>,
+        followers:  [array of Strings],
+        tags: <array of Strings>
+      }
+      */
+      // console.log("dataset", dataset);
+      // console.log("a", a);
+      // console.log("a[0]: ", a[0]);
+      // console.log("a[1]: ", a[1]);
+
+      // build dataset step 1: setup structure for ids
+      // and populate 'following' list
+      if (dataset[a[0]]) {
+        if (
+          dataset[a[0]].following &&
+          dataset[a[0]].following.indexOf(a[1]) < 0
+        ) {
+          dataset[a[0]].following.push(a[1]);
+        }
+      } else {
+        dataset[a[0]] = {
+          followers: [],
+          following: [a[1]],
+          tags: []
+        };
+      }
+
+      // build dataset step 2: populate 'followers' list
+      if (dataset[a[1]]) {
+        if (
+          dataset[a[1]].followers &&
+          dataset[a[1]].followers.indexOf(a[0]) < 0
+        ) {
+          dataset[a[1]].followers.push(a[0]);
+        }
+      } else {
+        dataset[a[1]] = {
+          following: [],
+          followers: [a[0]],
+          tags: []
+        };
+      }
+    }); // follows.map()
+
+    // DONE: step 3: populate tags for each key
+    for (var key in dataset) {
+      dataset[key].tags = await window.store
+        .tags(String(key))
+        .then(
+          function(a) {
+            return a[0];
+          },
+          function(e) {
+            console.log("error: ", e.message);
+          }
+        )
+        .catch(function() {
+          // TODO do something?
+        });
+    }
+
+    // step 4: create a separate list for tags
+    // represent as horizontal bar plot? or bubble chart?
+    // https://www.d3-graph-gallery.com/graph/barplot_horizontal.html
+    // it should do the job well: clearly show tag aggregation
+    // need to parse/normalise data into this format
+    /*
+    e.g.
+      {
+        "@bfeld":         1,
+        "@lessig:":       1
+        "@mattcharris":   5,
+        "@mokoyfman,":    1
+      }
+      */
+    // needs optimisation, currently O[n^3]
+    for (const key in dataset) {
+      let tagList = dataset[key].tags;
+      for (let i = 0, ii = tagList.length; i < ii; i += 1) {
+        // remove common typos scattered in tags ':', ','
+        let parsedTag = tagList[i].replace(/[;:().,]/gi, "");
+        // console.log(parsedTag);
+        if (!!tagsAggregate[parsedTag]) {
+          // already in list, increment
+          tagsAggregate[parsedTag] += 1;
+        } else {
+          // add to aggregate, count 1
+          tagsAggregate[parsedTag] = 1;
+        }
+      }
+    }
+    // console.log(tagsAggregate);
+
+    window.socialNetwork.tagsAggregate = tagsAggregate;
+
+    // DEV ONLY
+    window.tagsAggregate = tagsAggregate;
+    window.dataset = dataset;
+  }; // formatData()
 
   let init = (function() {
     getData();
@@ -490,4 +471,3 @@ try {
 } catch (e) {
   console.warn(e.message);
 }
-
