@@ -4,7 +4,7 @@ Task for Data61 (v0.1.0)
 
 ## unit test
 
-• `$ npm i -g jest && jest jest test/getData.test.js`
+• `$ npm i -g jest && jest test/getData.test.js`
 
 ## tasks
 
