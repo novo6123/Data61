@@ -2,6 +2,10 @@
 
 Task for Data61 (v0.1.0)
 
+## unit test
+
+• `$ npm i -g jest && jest jest test/getData.test.js`
+
 ## tasks
 
 1. An ADD button that can compose a social network by drawing samples from `store.js`. Repeatedly drawing samples should grow the social network.
