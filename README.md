@@ -1,38 +1,14 @@
-# Data61
+# About:
 
-Data61 task
+Task for Data61 (v0.1.0)
 
+## tasks
 
-
-
-
-## initial thoughts
-
-
-
-• try to decide on appropriate visual representation of data
-
-• custom graph? use a template? what chart type?
-
-• network graph seems sensible
-
-• https://www.d3-graph-gallery.com/network.html
-
-• network diagram: Directed and Unweighted
-
-• need to be wary of avoiding 'hairball' result
+1. An ADD button that can compose a social network by drawing samples from `store.js`. Repeatedly drawing samples should grow the social network.
+2. A CLEAR button that can clear the social network data to restart composing.
+3. A visualization of the social network.
+4. A visualization of one statistic about the social network: tag frequencies. That is, for the current social network, display the aggregated tag frequencies of the whole network.
 
 
 
-• arc diagram
-
-• https://www.d3-graph-gallery.com/arc.html
-
-• vertical variation will help present the potentially long id names
-
-
-
-• Tangled tree visualization II
-
-• https://observablehq.com/@nitaku/tangled-tree-visualization-ii
 
