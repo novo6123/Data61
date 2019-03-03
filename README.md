@@ -2,17 +2,37 @@
 
 Task for Data61 (v0.1.0)
 
-## unit test
+My attempt to visualise a social network with data from `store.js`, and tag frequencies.
 
-• `$ npm i -g jest && jest test/getData.test.js`
+## author:
 
-## tasks
+norman.vo@gmail.com
 
-1. An ADD button that can compose a social network by drawing samples from `store.js`. Repeatedly drawing samples should grow the social network.
-2. A CLEAR button that can clear the social network data to restart composing.
-3. A visualization of the social network.
-4. A visualization of one statistic about the social network: tag frequencies. That is, for the current social network, display the aggregated tag frequencies of the whole network.
+    #### Note:
+    tags were normalised for what seemed like errors such as ```;:().,```
 
+## run test
 
+• have you installed jest? `$ npm i -g jest`
+• run token unit test: from project root `$ jest test/getData.test.js`
 
+## bugs to fix
 
+• first render bug
+• labels on bar charts
+• axes scaling on bar chart
+• styles need more whitespace
+• visualise the follower relationships as a vertical arc diagram - requires link data formatting (a bit complex at the moment)
+• build tooling
+• table rendering
+
+## ideas for improvement
+
+• re-think layout to allow more nodes to be displayed
+• add support for older browsers (ES6 transpile)
+• reduce loops, remove repetitive methods (overused loops)
+• abstract out magic numbers, general code cleanup
+• add toggle to sort/unsort tags
+• Is the data case sensitive? Add toggle to re-render data with case-insensitive matching applied
+• animation between data changes
+• write better tests
