@@ -1,10 +1,3 @@
-/*
-1. An ADD button that can compose a social network by drawing samples from `store.js`. Repeatedly drawing samples should grow the social network.
-2. A CLEAR button that can clear the social network data to restart composing.
-3. A visualization of the social network.
-4. A visualization of one statistic about the social network: tag frequencies. That is, for the current social network, display the aggregated tag frequencies of the whole network.
-*/
-
 function vis() {
   "use strict";
 
@@ -28,12 +21,11 @@ function vis() {
   window.socialNetwork.data = window.socialNetwork.data || [];
   window.socialNetwork.tagsAggregate = {};
 
-  // add table data to page
+  /*
+   * @function renderTable
+   * @desc add table data to DOM
+   */
   let renderTable = function() {
-    // console.log("renderTable()");
-    // console.log(dataset);
-    // console.log(socialNetwork.data);
-    // console.log(socialNetwork.tagsAggregate);
 
     // insert label
     let label = document.createElement("h3");
@@ -92,7 +84,6 @@ function vis() {
           ? dataset[key].tags.join(", ")
           : "";
 
-      // console.log(dataTd);
       dataTr.appendChild(dataTd);
 
       dataTable.appendChild(dataTr);
@@ -100,49 +91,37 @@ function vis() {
     document.getElementById(`${VIS_ID.TABLE}`).appendChild(dataTable);
   }; // renderTable
 
+  /*
+   * @function renderRelationshipVis
+   * @desc render HTML elements containing IDs
+   */
   let renderRelationshipVis = function() {
     let visElem = document.getElementById(`${VIS_ID.RELATIONSHIPS}`);
+
     // insert label
     let label = document.createElement("h3");
     label.innerText = "relationships";
     visElem.appendChild(label);
 
-    // let svg = d3
-    //   .select(`#${VIS_ID.RELATIONSHIPS}`)
-    //   .append("svg")
-    //   .attr("width", VIS.width + 10 + 10)
-    //   .attr("height", VIS.height + 30 + 30)
-    //   .append("g");
-
-    // svg
-    //   .data(dataset)
-    //   .enter()
-    //   .append("rect")
-    //   .attr("data", dataset)
-    //   .text(function(a) {
-    //     console.log(a);
-    //     // return a
-    //   });
-
     let clusterWrapper = document.createElement("div");
     clusterWrapper.className += "clusterWrapper ";
     let cluster, target, targetFollower, targetFollowing;
     /*
-goal:
-<div class="cluster">
-    <div class="targetFollowing">23</div>
-    <div class="targetFollowing">92110</div>
-    <div class="targetFollowing">84399</div>
+    goal:
+    <div class="cluster">
+        <div class="targetFollowing">23</div>
+        <div class="targetFollowing">92110</div>
+        <div class="targetFollowing">84399</div>
 
-    <div class="target">295</div>
+        <div class="target">295</div>
 
-    <div class="targetFollower">1234</div>
-    <div class="targetFollower">30402</div>
-</div>
-*/
+        <div class="targetFollower">1234</div>
+        <div class="targetFollower">30402</div>
+    </div>
+    */
 
     for (var key in dataset) {
-      console.log(dataset[key]);
+      // console.log(dataset[key]);
       cluster = document.createElement("div");
       cluster.className += "cluster ";
 
@@ -151,8 +130,10 @@ goal:
         let widthClass = "w" + String(Math.floor(1000 / ii));
         targetFollowing = document.createElement("div");
         targetFollowing.className += "targetFollowing " + widthClass;
-        console.log((i + 1) / ii);
-        targetFollowing.title = dataset[key].following[i]; // add title for extra info on hover
+        // console.log((i + 1) / ii);
+
+        // add title for extra info on hover, in case overflow/occlusion occurs
+        targetFollowing.title = dataset[key].following[i];
         targetFollowing.innerText = dataset[key].following[i];
         cluster.appendChild(targetFollowing);
       }
@@ -168,32 +149,40 @@ goal:
         let widthClass = "w" + String(Math.floor(1000 / ii));
         targetFollower = document.createElement("div");
         targetFollower.className += "targetFollower " + widthClass;
-        targetFollower.title = dataset[key].followers[i]; // add title for extra info on hover
+
+        // add title for extra info on hover, in case overflow/occlusion occurs
+        targetFollower.title = dataset[key].followers[i];
         targetFollower.innerText = dataset[key].followers[i];
         cluster.appendChild(targetFollower);
       }
 
       clusterWrapper.appendChild(cluster);
     }
+
     visElem.appendChild(clusterWrapper);
   };
 
+  /*
+   * @function renderTagVis
+   * @desc render tags in vertical D3 bar chart
+   */
   let renderTagVis = function() {
     // console.log("renderTagVis()");
-    // https://www.d3-graph-gallery.com/graph/barplot_horizontal.html
 
     // insert label
     let label = document.createElement("h3");
     label.innerText = "tags";
     document.getElementById(`${VIS_ID.TAGS}`).appendChild(label);
 
+    const V_SCALE = 20; // seems to be reasonable for displaying lots of tags
+    const H_SCALE = 120;
+    // Math.max(tagsValue) + 10;
+    // TODO set H_SCALE dynamically
+
+    // console.log(V_SCALE, H_SCALE);
+
     let tagsList = [];
     let tagsValue = [];
-
-    const V_SCALE = 20; // seems to be reasonable for displaying lots of tags
-    const H_SCALE = 120; // Math.max(tagsValue) + 10; TODO dynamic scale!
-    // let H_SCALE = parseInt(Math.max(tagsValue) + 5);
-    // console.log(V_SCALE, H_SCALE);
 
     for (var key in socialNetwork.tagsAggregate) {
       tagsList.push(key);
@@ -202,19 +191,15 @@ goal:
     // tagsList.sort();
     // console.log(tagsList);
 
-    // set the dimensions and margins of the graph
     var margin = {
         top: 20,
         right: 20,
         bottom: 40,
         left: 120 // allow room for tag labels
       },
-      width = VIS.width,
-      // height = 2400 - margin.top - margin.bottom;
-      // TODO adjust height dynamically. Scrollable?
+      width = VIS.width, // TODO adjust height dynamically. Scrollable?
       height = V_SCALE * tagsList.length - margin.top - margin.bottom;
 
-    // append the svg object to the body of the page
     var svg = d3
       .select(`#${VIS_ID.TAGS}`)
       .append("svg")
@@ -228,6 +213,7 @@ goal:
       .scaleLinear()
       .domain([0, H_SCALE])
       .range([0, width]);
+
     svg
       .append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -248,47 +234,26 @@ goal:
         })
       )
       .padding(0.2);
-    svg.append("g").call(d3.axisLeft(y));
 
-    //Bars
+    svg
+      .append("g")
+      .call(d3.axisLeft(y));
+
+    // add bars
     svg
       .append("g")
       .selectAll("rect")
-      // .data(tagsList)
       .data(tagsList)
       .enter()
       .append("rect")
       .attr("x", x(0))
       .attr("y", function(a) {
-        // return y("a");
         return y(a);
-        // return y(tagsList);
-        // console.log("bars a: ", a);
-        // return y(d.Country);
       })
       .attr("width", function(a) {
-        // return x(4);
-        // console.log(socialNetwork.tagsAggregate[a]);
         return x(socialNetwork.tagsAggregate[a]);
-        // return x(tagsValue);
-        // console.log("expecting a value: ", a);
-        // return x(d.Value);
       })
       .attr("height", y.bandwidth());
-    // .attr("fill", "#69b3a2");
-    // .attr("fill", VIS.bar.colorFill);
-
-    // svg
-    //   .selectAll("rect")
-    //   .append("text")
-    //   .attr("class", "below")
-    //   .attr("x", 12)
-    //   .attr("dy", "1.2em")
-    //   .attr("text-anchor", "left")
-    //   .text(function(a) {
-    //     return "123";
-    //   })
-    //   .style("fill", "#000000");
 
     // add labels
     // Needs debugging
@@ -316,48 +281,27 @@ goal:
     //   })
     //   .attr("fill", VIS.bar.colorText)
     //   .attr("class", "barLabel");
-
-    // add labels to each bar
-    // svg
-    //   .selectAll("myRect")
-    //   .data(tagsList)
-    //   .enter()
-    //   .append("text")
-    //   .attr("x", x(0))
-    //   // .attr("x", function(a) {
-    //   //   // console.log("a: ", socialNetwork.tagsAggregate[a]);
-    //   //   return x(socialNetwork.tagsAggregate[a]);
-    //   // })
-    //   // .attr("y", 0)
-    //   .attr("y", function(a) {
-    //     console.log("y: ", socialNetwork.tagsAggregate[a]);
-    //     return y(socialNetwork.tagsAggregate[a]);
-    //   })
-    //   // .attr("y", barHeight / 2)
-    //   // .attr("dy", ".35em")
-    //   .attr("dy", 0)
-    //   .text(function(a) {
-    //     return socialNetwork.tagsAggregate[a];
-    //     // console.log(a);
-    //     // return "foo";
-    //     // return a;
-    //   })
-    //   .attr("fill", VIS.bar.colorText)
-    //   .attr("class", "barLabel");
   }; // renderTagVis()
 
+  /*
+   * @function renderViews
+   * @desc format data, render views
+   */
   let renderViews = function() {
     // console.log("renderViews()");
     formatData();
     renderTagVis();
-
-    // TODO
     renderRelationshipVis();
 
     // WIP
     renderTable();
   };
 
+  /*
+   * @function clearViews
+   * @desc buggy at the moment :(
+   * TODO debug
+   */
   let clearViews = function() {
     for (var key in VIS_ID) {
       document.getElementById(VIS_ID[key]).innerHTML = "";
@@ -366,12 +310,20 @@ goal:
     makeDisplayContainer();
   };
 
+  /*
+   * @function getData
+   * @desc get data from store.sample promise
+   */
   let getData = function() {
     window.store.sample().then(a => {
       socialNetwork.data.push(...a);
     });
   };
 
+  /*
+   * @function addControls
+   * @desc create buttons and add to DOM
+   */
   let addControls = function() {
     // button parent
     let buttonWrapper = document.createElement("div");
@@ -394,7 +346,7 @@ goal:
 
     // clear button
     buttonMaker("Clear", () => {
-      console.log("Clear socialNetwork.data");
+      // console.log("Clear socialNetwork.data");
       window.socialNetwork = {};
       window.dataset = {};
       window.tagsAggregate = {};
@@ -404,6 +356,10 @@ goal:
     document.body.appendChild(buttonWrapper);
   }; // addControls
 
+  /*
+   * @function makeDisplayContainer
+   * @desc create HTML elems from list
+   */
   let makeDisplayContainer = function() {
     for (var key in VIS_ID) {
       let displayWrapper = document.createElement("div");
@@ -418,6 +374,10 @@ goal:
   let dataset = {};
   let tagsAggregate = {};
 
+  /*
+   * @function formatData
+   * @desc format data from store.sample() promise, using async-await
+   */
   let formatData = async function() {
     follows.sort();
 
@@ -431,12 +391,8 @@ goal:
         tags: <array of Strings>
       }
       */
-      // console.log("dataset", dataset);
-      // console.log("a", a);
-      // console.log("a[0]: ", a[0]);
-      // console.log("a[1]: ", a[1]);
 
-      // build dataset step 1: setup structure for ids
+      // build dataset: setup structure for ids
       // and populate 'following' list
       if (dataset[a[0]]) {
         if (
@@ -453,7 +409,7 @@ goal:
         };
       }
 
-      // build dataset step 2: populate 'followers' list
+      // populate 'followers' list
       if (dataset[a[1]]) {
         if (
           dataset[a[1]].followers &&
@@ -470,7 +426,7 @@ goal:
       }
     }); // follows.map()
 
-    // DONE: step 3: populate tags for each key
+    // populate tags for each key
     for (var key in dataset) {
       dataset[key].tags = await window.store
         .tags(String(key))
@@ -483,14 +439,11 @@ goal:
           }
         )
         .catch(function() {
-          // TODO do something?
+          // TODO do something? handle error?
         });
     }
 
     // step 4: create a separate list for tags
-    // represent as horizontal bar plot? or bubble chart?
-    // https://www.d3-graph-gallery.com/graph/barplot_horizontal.html
-    // it should do the job well: clearly show tag aggregation
     // need to parse/normalise data into this format
     /*
     e.g.
@@ -505,8 +458,10 @@ goal:
     for (const key in dataset) {
       let tagList = dataset[key].tags;
       for (let i = 0, ii = tagList.length; i < ii; i += 1) {
+
         // remove common typos scattered in tags ':', ','
         let parsedTag = tagList[i].replace(/[;:().,]/gi, "");
+
         // console.log(parsedTag);
         if (!!tagsAggregate[parsedTag]) {
           // already in list, increment
@@ -521,9 +476,6 @@ goal:
 
     window.socialNetwork.tagsAggregate = tagsAggregate;
 
-    // DEV ONLY
-    window.tagsAggregate = tagsAggregate;
-    window.dataset = dataset;
   }; // formatData()
 
   let init = (function() {
