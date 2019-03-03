@@ -15,10 +15,25 @@
       My attempt to visualise a social network with data from `store.js`, and
       tag frequencies.
     </p>
+    <p>Chevrons indicate 'following' direction</p>
+    <p>
+      <em
+        >Note: tags were normalised for what seemed like errors such as
+        <code>;:().,</code></em
+      >
+    </p>
 
-    <link href="./build/style.css" rel="stylesheet" type="text/css" />
-    <script src="./src/lib/d3.v4.js"></script>
-    <script src="./src/lib/store.js"></script>
-    <script type="module" src="./src/vis.js"></script>
+    <h3>controls</h3>
+    <p>Use 'Add' button to grow network, views will re-render.</p>
+    <p>Use 'Clear' button to clear everything</p>
+    <p>
+      jump to: <a href="#relationshipsVisual">relationships visual</a> |
+      <a href="#tagsVisual">tags visual</a> | <a href="#table">table data</a>
+    </p>
+
+    <link href="./build/style.min.css" rel="stylesheet" type="text/css" />
+    <script src="./build/d3.v4.min.js"></script>
+    <script src="./build/store.min.js"></script>
+    <script type="module" src="./build/vis.min.js"></script>
   </body>
 </html>
