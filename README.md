@@ -3,7 +3,7 @@
 1. clean up loops. Replace with 'forEach'?
 2. break up main script with ES modules
 3. separate views for id vis, tag vis, and table.
-
+4. add GitHub page for index
 
 # About:
 
